@@ -167,3 +167,39 @@ It's not clear to me that there is any more non-canonical splicing of SARS-Cov2 
 If I knew more about IRE-dependent splicing (eg the intron sizes, the preferred motifs) then maybe I could be better about filtering for the introns that I believe to be truly IRE-dependent, and maybe I would see a signal. I'll leave that for Letita and Long to consider and investigate further.
 
 Another question I have about their hypothesis is if the model is that SARS-Cov2 inhibits Xbp1 splicing by outcompeting for Ire1, Ire1-dependent splicing isn't necessary for this competition and all that needs to happen is Ire1 binding to SARSCov2 RNA (though granted, splicing is something we can observe with RNA-seq, so it made sense to look for splicing).
+
+### Update
+
+For clarity for Long, let's plot the total number of viral reads out of total reads for each sample:
+
+```{r}
+#table form
+TotalCountsPerChrom %>%
+  mutate(HostOrVirus = case_when(
+    chrom == "MN908947.3" ~ "SARS-Cov2",
+    TRUE ~ "Host"
+  )) %>%
+  group_by(sample) %>%
+  mutate(TotalReads = sum(counts)) %>%
+  ungroup() %>%
+  group_by(HostOrVirus, sample, TotalReads) %>%
+  summarise(Reads = sum(counts)) %>%
+  mutate(FractionReads=Reads/TotalReads*100) %>%
+  select(HostOrVirus, sample, FractionReads)
+
+#Plot form
+TotalCountsPerChrom %>%
+  mutate(HostOrVirus = case_when(
+    chrom == "MN908947.3" ~ "SARS-Cov2",
+    TRUE ~ "Host"
+  )) %>%
+  group_by(HostOrVirus, sample) %>%
+  summarise(Reads = sum(counts)) %>%
+  ggplot(aes(x=sample, y=Reads, fill=HostOrVirus)) +
+  geom_col(position="fill") +
+  theme_bw() +
+  ylab("Fraction reads") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+```
+
