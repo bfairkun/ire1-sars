@@ -8,7 +8,8 @@ IDS, = glob_wildcards("bams/{sample}.bam")
 rule all:
     input:
         # The first rule should define the default target files
-        expand("juncs/{sample}.annotated.bed.gz", sample=IDS)
+        expand("../output/{sample}.annotated.bed.gz", sample=IDS),
+        "../output/TotalReadsPerChrom.tsv"
 
 rule indexBams:
     input:
@@ -85,3 +86,30 @@ rule regtools_annotate:
         (awk 'NR>1' {input.bed} | awk '$1~"chr" || $1~"MN90894"' | regtools junctions annotate -S - {input.fa} {input.gtf} | gzip - > {output}) &> {log}
         """
 
+
+rule cp_junc_results:
+    input:
+        "juncs/{sample}.annotated.bed.gz"
+    output:
+        "../output/{sample}.annotated.bed.gz"
+    shell:
+        "cp {input} {output}"
+
+rule CountTotalReadsPerChrom:
+    input:
+        bam = "bams/{sample}.bam",
+        bai = "bams/{sample}.bam.bai"
+    output:
+        "idxstats/{sample}.txt"
+    shell:
+        "samtools idxstats {input.bam} > {output}"
+
+rule CatTotalReadsPerChrom:
+    input:
+        expand("idxstats/{sample}.txt", sample=IDS)
+    output:
+        "../output/TotalReadsPerChrom.tsv"
+    shell:
+        """
+        awk -v OFS='\\t' '{{print $0, FILENAME}}' {input} > {output}
+        """
