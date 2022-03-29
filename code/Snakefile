@@ -1,0 +1,87 @@
+# The main entry point of your workflow.
+# After configuring, running snakemake -n in a clone of this repository should successfully execute a dry-run of the workflow.
+
+# Instead of using samples.tsv file, a quick/dirty way to apply rules over grob of existing files is this:
+# Before starting the pipeline, download bams to "bams/{sample}.bam". wget can download dropbox files from the command line like this: wget "https://www.dropbox.com/sh/x2wltsvcrvjn73d/AADhBFaFgQAX6TO6PvzgRSM9a/Galaxy60-IRE1KO-Sars2-3.bam?dl=1"
+IDS, = glob_wildcards("bams/{sample}.bam")
+
+rule all:
+    input:
+        # The first rule should define the default target files
+        expand("juncs/{sample}.annotated.bed.gz", sample=IDS)
+
+rule indexBams:
+    input:
+        "bams/{sample}.bam"
+    output:
+        "bams/{sample}.bam.bai"
+    shell:
+        "samtools index {input}"
+
+rule regtools_extract:
+    input:
+        bam = "bams/{sample}.bam",
+        bai = "bams/{sample}.bam.bai"
+    output:
+        "juncs/{sample}.junc.bed"
+    conda:
+        "envs/regtools.yml"
+    log:
+        "logs/regtools_extract/{sample}.log"
+    params:
+        ""
+    shell:
+        """
+        echo "name={wildcards.sample} graphType=junctions" > {output}
+        (regtools junctions extract -m 15 -s 2 {params} {input.bam} >> {output} ) &> {log}
+        """
+
+rule DownloadGenome:
+    output:
+        sars_fa = "Ref/sars.fa",
+        sars_gtf = "Ref/sars.gtf",
+        hg19_fa = "Ref/hg19.fa",
+        hg19_gtf = "Ref/hg19.gtf"
+    shell:
+        """
+        wget -O- http://ftp.ensemblgenomes.org/pub/viruses/fasta/sars_cov_2/dna/Sars_cov_2.ASM985889v3.dna.toplevel.fa.gz | zcat > {output.sars_fa}
+        wget -O- http://ftp.ensemblgenomes.org/pub/viruses/gtf/sars_cov_2/Sars_cov_2.ASM985889v3.101.gtf.gz | zcat > {output.sars_gtf}
+        wget -O- https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/GRCh37_mapping/gencode.v39lift37.annotation.gtf.gz | zcat > {output.hg19_gtf}
+        wget -O- https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/GRCh37_mapping/GRCh37.primary_assembly.genome.fa.gz | zcat > {output.hg19_fa}
+        """
+
+rule CatGenomes:
+    input:
+        sars_fa = "Ref/sars.fa",
+        sars_gtf = "Ref/sars.gtf",
+        hg19_fa = "Ref/hg19.fa",
+        hg19_gtf = "Ref/hg19.gtf"
+    output:
+        fa = "Ref/hg19_and_sars.fa",
+        fai = "Ref/hg19_and_sars.fa.fai",
+        gtf = "Ref/hg19_and_sars.gtf"
+    log:
+        "logs/CatGenomes.log"
+    shell:
+        """
+        cat {input.hg19_fa} {input.sars_fa} > {output.fa}
+        samtools faidx {output.fa}
+        cat {input.hg19_gtf} {input.sars_gtf} > {output.gtf}
+        """
+
+rule regtools_annotate:
+    input:
+        fa = "Ref/hg19_and_sars.fa",
+        gtf = "Ref/hg19_and_sars.gtf",
+        bed = "juncs/{sample}.junc.bed"
+    output:
+        "juncs/{sample}.annotated.bed.gz"
+    conda:
+        "envs/regtools.yml"
+    log:
+        "logs/regtools_annotate/{sample}.log"
+    shell:
+        """
+        (awk 'NR>1' {input.bed} | awk '$1~"chr" || $1~"MN90894"' | regtools junctions annotate -S - {input.fa} {input.gtf} | gzip - > {output}) &> {log}
+        """
+

@@ -1,0 +1,125 @@
+---
+title: "ExploreJuncTable"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F)
+```
+
+## Introduction
+
+Letita and Long are interested in the hyptothesis that SARS-Cov2 genome may have decoy Ire1 binding/splice sites to out-compete Ire-1-dependent non-canonical splicing of Xbp1 which is involved in innate immune response signalling. They have infected WT or IRE1-KO cells with SARS-Cov2, and performed stranded RNA-seq, and are interested in exploring potential Ire-1 dependent splice sites, particularly on SAR-Cov2 RNA. I have tabulated their splice junction alignments from their bam files with `regtools juntions extract` and `regtools junctions annotate` using the rules described the [snakefile](../code/Snakefile). Here I will quickly explore the results before presenting them to Letita and Long.
+
+first let's load some R libraries
+
+```{r}
+library(tidyverse)
+```
+
+Now let's read in the junction files
+
+```{r}
+junc_files <- list.files("../code/juncs", pattern="*.bed.gz", full.names = T) %>%
+  setNames(nm=str_replace(., ".+?-(.+?-Sars2-.+?)\\.annotated.bed.gz", "\\1"))
+junc_files
+
+dat <- lapply(junc_files, read_tsv) %>% 
+   bind_rows(.id="sample")
+
+head(dat)
+```
+
+Now let's explore the data a bit...
+
+Sort of similar to normalizing data to the total number of mapped reads, let's plot the total number of spliced reads and consider normalizing later results to a factor based on this.
+
+```{r}
+dat %>%
+  group_by(sample) %>%
+  summarise(TotalJuncs = sum(score)) %>%
+  ggplot(aes(x=sample, y=TotalJuncs)) +
+  geom_col() +
+  theme_bw()
+```
+
+
+Ok, so there are more total junc reads in the control samples than the IRE1KO. This could just be unequal sequencing depth, or biological differences in amount of IRE-dependent splicing consistent with our hypothesis. How about let's replot that but just filter for spliceosomal (GT-AG) introns.
+
+```{r}
+dat %>%
+  filter(splice_site == "GT-AG") %>%
+  group_by(sample) %>%
+  summarise(TotalJuncs = sum(score)) %>%
+  ggplot(aes(x=sample, y=TotalJuncs)) +
+  geom_col() +
+  theme_bw()
+```
+
+Wow, now the opposite effect. The control samples have less spliceosome dependent splicing, so the previous plot isn't due to just differences in total read depth. This is consistent with their hypothesis.
+
+Another quick quality check is that Long mentioned that >90% of reads map to SARS cov2 contig. Let's verify that by counting junctions mapping to chromosome versus SARS cov2 contig.
+```{r}
+dat %>%
+  mutate(HostOrVirus = case_when(
+    chrom == "MN908947.3" ~ "SARS-Cov2",
+    TRUE ~ "Host"
+  )) %>%
+  group_by(sample, HostOrVirus) %>%
+  summarise(TotalJuncs = sum(score)) %>%
+  ggplot(aes(x=sample, y=TotalJuncs, fill=HostOrVirus)) +
+  geom_col(position="fill") +
+  theme_bw() +
+  ylab("Fraction junc reads") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+```
+
+Ok so IRE-KO has a much larger fraction of reads originating from SARS, consistent with impaired ability to fight off infection. This important to keep in mind for downstream analyses.
+
+
+Let's verify IRE1-dependent non-canonical splicing of a 26nt intron in xbp1.
+
+```{r}
+dat %>%
+  filter(gene_names=="XBP1") %>%
+  mutate(len = end-start) %>%
+  filter( len < 30)
+```
+
+Ok, at least in these two control samples, but not in any of the IRE-KO samples I can see some splice junctions of a 26nt non-canonical intron. Cool.
+
+
+Now let's check fraction junc reads derived from non-spliceosomal introns (as determined by GT-AG or AT-AC, or GC-AG motifs at intron boundaries).
+
+```{r}
+dat %>%
+  count(splice_site) %>%
+  arrange(desc(n))
+
+dat %>%
+  mutate(HostOrVirus = case_when(
+    chrom == "MN908947.3" ~ "SARS-Cov2",
+    TRUE ~ "Host"
+  )) %>%
+  mutate(SpliceSiteType = case_when(
+    splice_site %in% c("GT-AG", "AT-AC", "GC-AG") ~ "spliceosomal",
+    TRUE ~ "Non-spliceosomal"
+  )) %>%
+  group_by(sample, HostOrVirus, SpliceSiteType) %>%
+  summarise(TotalJuncs = sum(score)) %>%
+  ggplot(aes(x=sample, y=TotalJuncs, fill=SpliceSiteType)) +
+  geom_col(position="fill") +
+  theme_bw() +
+  ylab("Fraction junc reads") +
+  facet_wrap(~HostOrVirus) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+```
+
+Ok, so the splicing in the host genome is predominantly spliceosomal, as expected. In SARS-Cov2 its primarily non-spliceosomal. Which doesn't necessarily surprise me. And also keep in mind that non-canonical splicing is indistinguishable from deletions compared to the reference genome. So some of the 'non-canonical splicing' may actual just be deletion variants from the SARS-Cov2 reference.  What I think makes sense to look for is the number of canonical junctions in SARS-Cov2 normalized to the total number of SARS-Cov2 reads. I think we would need to do another command to get that total number of SARS-Cov2 reads per sample, perhaps using `samtools idxstats` [see link](https://www.biostars.org/p/14531/).
+
+I'm going to take a break from this for now and just send these results to Long and Letita.
+
+
+
