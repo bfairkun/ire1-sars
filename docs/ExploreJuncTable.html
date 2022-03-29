@@ -345,7 +345,7 @@ $(document).ready(function () {
 <strong>Last updated:</strong> 2022-03-29
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>ire1_sars/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -358,6 +358,18 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 </div>
 <div id="checks" class="tab-pane fade">
 <div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
@@ -421,12 +433,52 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongnoversioncontrol"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>Repository version:</strong> no version control </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunire1sarstreec4d98f23e59063b5159e400cfdda8585138b90f0targetblankc4d98f2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/ire1-sars/tree/c4d98f23e59063b5159e400cfdda8585138b90f0" target="_blank">c4d98f2</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongnoversioncontrol" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunire1sarstreec4d98f23e59063b5159e400cfdda8585138b90f0targetblankc4d98f2a" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Tracking code development and connecting the code version to the results is critical for reproducibility. To start using Git, open the Terminal and type <code>git init</code> in your project directory.</p>
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/bfairkun/ire1-sars/tree/c4d98f23e59063b5159e400cfdda8585138b90f0" target="_blank">c4d98f2</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rproj.user/
+    Ignored:    ._.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    code/.Snakefile.swp
+    Ignored:    code/._.DS_Store
+    Ignored:    code/.snakemake/
+    Ignored:    code/Ref/
+    Ignored:    code/bams/
+    Ignored:    code/idxstats/
+    Ignored:    code/juncs/
+    Ignored:    code/logs/
+
+Untracked files:
+    Untracked:  output/Galaxy36-Control-Sars2-1.annotated.bed.gz
+    Untracked:  output/Galaxy39-Control-Sars2-2.annotated.bed.gz
+    Untracked:  output/Galaxy42-Control-Sars2-3.annotated.bed.gz
+    Untracked:  output/Galaxy54-IRE1KO-Sars2-1.annotated.bed.gz
+    Untracked:  output/Galaxy57-IRE1KO-Sars2-2.annotated.bed.gz
+    Untracked:  output/Galaxy60-IRE1KO-Sars2-3.annotated.bed.gz
+    Untracked:  output/TotalReadsPerChrom.tsv
+
+Unstaged changes:
+    Modified:   analysis/ExploreJuncTable.Rmd
+    Modified:   code/Snakefile
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
 </div>
 </div>
 </div>
@@ -434,9 +486,69 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-This project is not being versioned with Git. To obtain the full reproducibility benefits of using workflowr, please see <code>?wflow_start</code>.
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/ExploreJuncTable.Rmd</code>) and HTML (<code>docs/ExploreJuncTable.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/ire1-sars/blob/c4d98f23e59063b5159e400cfdda8585138b90f0/analysis/ExploreJuncTable.Rmd" target="_blank">c4d98f2</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2022-03-29
+</td>
+<td>
+initial commit
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/ire1-sars/c4d98f23e59063b5159e400cfdda8585138b90f0/docs/ExploreJuncTable.html" target="_blank">c4d98f2</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2022-03-29
+</td>
+<td>
+initial commit
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -454,22 +566,24 @@ This project is not being versioned with Git. To obtain the full reproducibility
 <pre><code>── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
 x dplyr::filter() masks stats::filter()
 x dplyr::lag()    masks stats::lag()</code></pre>
-<p>Now let’s read in the junction files</p>
-<pre class="r"><code>junc_files &lt;- list.files(&quot;../code/juncs&quot;, pattern=&quot;*.bed.gz&quot;, full.names = T) %&gt;%
+<p>Now let’s read in the tabulated junction files. You can download the repository yourself and get these junction files:</p>
+<p><code>git clone git@github.com:bfairkun/ire1-sars.git</code>,</p>
+<p>then change to the <code>analysis</code> directory, and try running this code:</p>
+<pre class="r"><code>junc_files &lt;- list.files(&quot;../output&quot;, pattern=&quot;*.bed.gz&quot;, full.names = T) %&gt;%
   setNames(nm=str_replace(., &quot;.+?-(.+?-Sars2-.+?)\\.annotated.bed.gz&quot;, &quot;\\1&quot;))
 junc_files</code></pre>
-<pre><code>                                          Control-Sars2-1 
-&quot;../code/juncs/Galaxy36-Control-Sars2-1.annotated.bed.gz&quot; 
-                                          Control-Sars2-2 
-&quot;../code/juncs/Galaxy39-Control-Sars2-2.annotated.bed.gz&quot; 
-                                          Control-Sars2-3 
-&quot;../code/juncs/Galaxy42-Control-Sars2-3.annotated.bed.gz&quot; 
-                                           IRE1KO-Sars2-1 
- &quot;../code/juncs/Galaxy54-IRE1KO-Sars2-1.annotated.bed.gz&quot; 
-                                           IRE1KO-Sars2-2 
- &quot;../code/juncs/Galaxy57-IRE1KO-Sars2-2.annotated.bed.gz&quot; 
-                                           IRE1KO-Sars2-3 
- &quot;../code/juncs/Galaxy60-IRE1KO-Sars2-3.annotated.bed.gz&quot; </code></pre>
+<pre><code>                                      Control-Sars2-1 
+&quot;../output/Galaxy36-Control-Sars2-1.annotated.bed.gz&quot; 
+                                      Control-Sars2-2 
+&quot;../output/Galaxy39-Control-Sars2-2.annotated.bed.gz&quot; 
+                                      Control-Sars2-3 
+&quot;../output/Galaxy42-Control-Sars2-3.annotated.bed.gz&quot; 
+                                       IRE1KO-Sars2-1 
+ &quot;../output/Galaxy54-IRE1KO-Sars2-1.annotated.bed.gz&quot; 
+                                       IRE1KO-Sars2-2 
+ &quot;../output/Galaxy57-IRE1KO-Sars2-2.annotated.bed.gz&quot; 
+                                       IRE1KO-Sars2-3 
+ &quot;../output/Galaxy60-IRE1KO-Sars2-3.annotated.bed.gz&quot; </code></pre>
 <pre class="r"><code>dat &lt;- lapply(junc_files, read_tsv) %&gt;% 
    bind_rows(.id=&quot;sample&quot;)</code></pre>
 <pre><code>Parsed with column specification:
@@ -615,6 +729,43 @@ cols(
   geom_col() +
   theme_bw()</code></pre>
 <p><img src="figure/ExploreJuncTable.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/ire1-sars/blob/c4d98f23e59063b5159e400cfdda8585138b90f0/docs/figure/ExploreJuncTable.Rmd/unnamed-chunk-3-1.png" target="_blank">c4d98f2</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2022-03-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Ok, so there are more total junc reads in the control samples than the IRE1KO. This could just be unequal sequencing depth, or biological differences in amount of IRE-dependent splicing consistent with our hypothesis. How about let’s replot that but just filter for spliceosomal (GT-AG) introns.</p>
 <pre class="r"><code>dat %&gt;%
   filter(splice_site == &quot;GT-AG&quot;) %&gt;%
@@ -624,6 +775,43 @@ cols(
   geom_col() +
   theme_bw()</code></pre>
 <p><img src="figure/ExploreJuncTable.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/ire1-sars/blob/c4d98f23e59063b5159e400cfdda8585138b90f0/docs/figure/ExploreJuncTable.Rmd/unnamed-chunk-4-1.png" target="_blank">c4d98f2</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2022-03-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Wow, now the opposite effect. The control samples have less spliceosome dependent splicing, so the previous plot isn’t due to just differences in total read depth. This is consistent with their hypothesis.</p>
 <p>Another quick quality check is that Long mentioned that &gt;90% of reads map to SARS cov2 contig. Let’s verify that by counting junctions mapping to chromosome versus SARS cov2 contig.</p>
 <pre class="r"><code>dat %&gt;%
@@ -639,6 +827,43 @@ cols(
   ylab(&quot;Fraction junc reads&quot;) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))</code></pre>
 <p><img src="figure/ExploreJuncTable.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/ire1-sars/blob/c4d98f23e59063b5159e400cfdda8585138b90f0/docs/figure/ExploreJuncTable.Rmd/unnamed-chunk-5-1.png" target="_blank">c4d98f2</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2022-03-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Ok so IRE-KO has a much larger fraction of reads originating from SARS, consistent with impaired ability to fight off infection. This important to keep in mind for downstream analyses.</p>
 <p>Let’s verify IRE1-dependent non-canonical splicing of a 26nt intron in xbp1.</p>
 <pre class="r"><code>dat %&gt;%
@@ -691,8 +916,93 @@ cols(
   facet_wrap(~HostOrVirus) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))</code></pre>
 <p><img src="figure/ExploreJuncTable.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Ok, so the splicing in the host genome is predominantly spliceosomal, as expected. In SARS-Cov2 its primarily non-spliceosomal. Which doesn’t necessarily surprise me. And also keep in mind that non-canonical splicing is indistinguishable from deletions compared to the reference genome. So some of the ‘non-canonical splicing’ may actual just be deletion variants from the SARS-Cov2 reference. What I think makes sense to look for is the number of canonical junctions in SARS-Cov2 normalized to the total number of SARS-Cov2 reads. I think we would need to do another command to get that total number of SARS-Cov2 reads per sample, perhaps using <code>samtools idxstats</code> <a href="https://www.biostars.org/p/14531/">see link</a>.</p>
-<p>I’m going to take a break from this for now and just send these results to Long and Letita.</p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/ire1-sars/blob/c4d98f23e59063b5159e400cfdda8585138b90f0/docs/figure/ExploreJuncTable.Rmd/unnamed-chunk-7-1.png" target="_blank">c4d98f2</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2022-03-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ok, so the splicing in the host genome is predominantly spliceosomal, as expected. In SARS-Cov2 its primarily non-spliceosomal. Which doesn’t necessarily surprise me. And also keep in mind that non-canonical splicing is indistinguishable from deletions compared to the reference genome. So some of the ‘non-canonical splicing’ may actual just be deletion variants from the SARS-Cov2 reference. What I think makes sense to look for is the number of canonical junctions in SARS-Cov2 normalized to the total number of SARS-Cov2 reads. I think we would need to do another command to get that total number of SARS-Cov2 reads per sample, perhaps using <code>samtools idxstats</code> <a href="https://www.biostars.org/p/14531/">see link</a>. I already did that in the Snakefile.</p>
+<pre class="r"><code>TotalCountsPerChrom &lt;- read_tsv(&quot;../output/TotalReadsPerChrom.tsv&quot;, col_names = c(&quot;chrom&quot;, &quot;size&quot;, &quot;counts&quot;, &quot;x&quot;, &quot;FN&quot;)) %&gt;%
+  mutate(sample = str_replace(FN, &quot;.+?-(.+?-Sars2-.+?)\\.txt&quot;, &quot;\\1&quot;))</code></pre>
+<pre><code>Parsed with column specification:
+cols(
+  chrom = col_character(),
+  size = col_double(),
+  counts = col_double(),
+  x = col_double(),
+  FN = col_character()
+)</code></pre>
+<pre class="r"><code>TotalCountsSARS &lt;- TotalCountsPerChrom %&gt;%
+  filter(chrom == &quot;MN908947.3&quot;) %&gt;%
+  select(sample, TotalCounts = counts)
+
+TotalCountsSARS</code></pre>
+<pre><code># A tibble: 6 x 2
+  sample          TotalCounts
+  &lt;chr&gt;                 &lt;dbl&gt;
+1 Control-Sars2-2   194448214
+2 Control-Sars2-1   185141825
+3 IRE1KO-Sars2-2    266115623
+4 IRE1KO-Sars2-3    252758643
+5 IRE1KO-Sars2-1    261692333
+6 Control-Sars2-3   187376587</code></pre>
+<p>Ok, consistent with the plot based on total splice junction counts, it is clear that the IRE1-KO samples hve more SARS Cov2 reads (though technically I did not normalize for total read depth here).</p>
+<p>In any case, back to counting the total number of non-canonical splicing reads on SARS-Cov2 normalized to the total number of SARS Cov2 reads:</p>
+<pre class="r"><code>dat %&gt;%
+  mutate(HostOrVirus = case_when(
+    chrom == &quot;MN908947.3&quot; ~ &quot;SARS-Cov2&quot;,
+    TRUE ~ &quot;Host&quot;
+  )) %&gt;%
+  filter(HostOrVirus == &quot;SARS-Cov2&quot;) %&gt;%
+  mutate(SpliceSiteType = case_when(
+    splice_site %in% c(&quot;GT-AG&quot;, &quot;AT-AC&quot;, &quot;GC-AG&quot;) ~ &quot;spliceosomal&quot;,
+    TRUE ~ &quot;Non-spliceosomal&quot;
+  )) %&gt;%
+  group_by(sample, SpliceSiteType) %&gt;%
+  summarise(TotalJuncs = sum(score)) %&gt;%
+  inner_join(TotalCountsSARS, by=&quot;sample&quot;) %&gt;%
+  mutate(FractionJuncsOutOfTotalReads = TotalJuncs/TotalCounts*100) %&gt;%
+  ggplot(aes(x=sample, y=FractionJuncsOutOfTotalReads)) +
+  geom_col() +
+  facet_wrap(~SpliceSiteType, scales = &quot;free&quot;) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))</code></pre>
+<p><img src="figure/ExploreJuncTable.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>It’s not clear to me that there is any more non-canonical splicing of SARS-Cov2 in IRE1-KO cells than in in WT. Maybe there are more spliceosomal reads, but those only make up a small small fraction of the total junctions on SAR-Cov2 so I’m not sure how meaningful that is.</p>
+<p>If I knew more about IRE-dependent splicing (eg the intron sizes, the preferred motifs) then maybe I could be better about filtering for the introns that I believe to be truly IRE-dependent, and maybe I would see a signal. I’ll leave that for Letita and Long to consider and investigate further.</p>
+<p>Another question I have about their hypothesis is if the model is that SARS-Cov2 inhibits Xbp1 splicing by outcompeting for Ire1, Ire1-dependent splicing isn’t necessary for this competition and all that needs to happen is Ire1 binding to SARSCov2 RNA (though granted, splicing is something we can observe with RNA-seq, so it made sense to look for splicing).</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -736,10 +1046,10 @@ loaded via a namespace (and not attached):
 [33] promises_1.0.1   backports_1.1.4  scales_1.1.0     jsonlite_1.6    
 [37] farver_2.1.0     fs_1.3.1         hms_0.5.3        digest_0.6.20   
 [41] stringi_1.4.3    grid_3.6.1       rprojroot_2.0.2  cli_2.2.0       
-[45] tools_3.6.1      magrittr_1.5     crayon_1.3.4     pkgconfig_2.0.2 
-[49] xml2_1.3.2       reprex_0.3.0     lubridate_1.7.4  rstudioapi_0.10 
-[53] assertthat_0.2.1 rmarkdown_1.13   httr_1.4.1       R6_2.4.0        
-[57] nlme_3.1-140     git2r_0.26.1     compiler_3.6.1  </code></pre>
+[45] tools_3.6.1      magrittr_1.5     crayon_1.3.4     whisker_0.3-2   
+[49] pkgconfig_2.0.2  xml2_1.3.2       reprex_0.3.0     lubridate_1.7.4 
+[53] rstudioapi_0.10  assertthat_0.2.1 rmarkdown_1.13   httr_1.4.1      
+[57] R6_2.4.0         nlme_3.1-140     git2r_0.26.1     compiler_3.6.1  </code></pre>
 </div>
 </div>
 

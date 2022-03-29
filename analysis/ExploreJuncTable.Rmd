@@ -17,10 +17,14 @@ first let's load some R libraries
 library(tidyverse)
 ```
 
-Now let's read in the junction files
+Now let's read in the tabulated junction files. You can download the repository yourself and get these junction files:
+
+`git clone git@github.com:bfairkun/ire1-sars.git`,
+
+then change to the `analysis` directory, and try running this code:
 
 ```{r}
-junc_files <- list.files("../code/juncs", pattern="*.bed.gz", full.names = T) %>%
+junc_files <- list.files("../output", pattern="*.bed.gz", full.names = T) %>%
   setNames(nm=str_replace(., ".+?-(.+?-Sars2-.+?)\\.annotated.bed.gz", "\\1"))
 junc_files
 
@@ -117,9 +121,49 @@ dat %>%
 
 ```
 
-Ok, so the splicing in the host genome is predominantly spliceosomal, as expected. In SARS-Cov2 its primarily non-spliceosomal. Which doesn't necessarily surprise me. And also keep in mind that non-canonical splicing is indistinguishable from deletions compared to the reference genome. So some of the 'non-canonical splicing' may actual just be deletion variants from the SARS-Cov2 reference.  What I think makes sense to look for is the number of canonical junctions in SARS-Cov2 normalized to the total number of SARS-Cov2 reads. I think we would need to do another command to get that total number of SARS-Cov2 reads per sample, perhaps using `samtools idxstats` [see link](https://www.biostars.org/p/14531/).
+Ok, so the splicing in the host genome is predominantly spliceosomal, as expected. In SARS-Cov2 its primarily non-spliceosomal. Which doesn't necessarily surprise me. And also keep in mind that non-canonical splicing is indistinguishable from deletions compared to the reference genome. So some of the 'non-canonical splicing' may actual just be deletion variants from the SARS-Cov2 reference.  What I think makes sense to look for is the number of canonical junctions in SARS-Cov2 normalized to the total number of SARS-Cov2 reads. I think we would need to do another command to get that total number of SARS-Cov2 reads per sample, perhaps using `samtools idxstats` [see link](https://www.biostars.org/p/14531/). I already did that in the Snakefile.
 
-I'm going to take a break from this for now and just send these results to Long and Letita.
+```{r}
+TotalCountsPerChrom <- read_tsv("../output/TotalReadsPerChrom.tsv", col_names = c("chrom", "size", "counts", "x", "FN")) %>%
+  mutate(sample = str_replace(FN, ".+?-(.+?-Sars2-.+?)\\.txt", "\\1"))
+
+TotalCountsSARS <- TotalCountsPerChrom %>%
+  filter(chrom == "MN908947.3") %>%
+  select(sample, TotalCounts = counts)
+
+TotalCountsSARS
+```
+
+Ok, consistent with the plot based on total splice junction counts, it is clear that the IRE1-KO samples hve more SARS Cov2 reads (though technically I did not normalize for total read depth here).
+
+In any case, back to counting the total number of non-canonical splicing reads on SARS-Cov2 normalized to the total number of SARS Cov2 reads:
+
+```{r}
+dat %>%
+  mutate(HostOrVirus = case_when(
+    chrom == "MN908947.3" ~ "SARS-Cov2",
+    TRUE ~ "Host"
+  )) %>%
+  filter(HostOrVirus == "SARS-Cov2") %>%
+  mutate(SpliceSiteType = case_when(
+    splice_site %in% c("GT-AG", "AT-AC", "GC-AG") ~ "spliceosomal",
+    TRUE ~ "Non-spliceosomal"
+  )) %>%
+  group_by(sample, SpliceSiteType) %>%
+  summarise(TotalJuncs = sum(score)) %>%
+  inner_join(TotalCountsSARS, by="sample") %>%
+  mutate(FractionJuncsOutOfTotalReads = TotalJuncs/TotalCounts*100) %>%
+  ggplot(aes(x=sample, y=FractionJuncsOutOfTotalReads)) +
+  geom_col() +
+  facet_wrap(~SpliceSiteType, scales = "free") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+```
 
 
+It's not clear to me that there is any more non-canonical splicing of SARS-Cov2 in IRE1-KO cells than in in WT. Maybe there are more spliceosomal reads, but those only make up a small small fraction of the total junctions on SAR-Cov2 so I'm not sure how meaningful that is.
 
+If I knew more about IRE-dependent splicing (eg the intron sizes, the preferred motifs) then maybe I could be better about filtering for the introns that I believe to be truly IRE-dependent, and maybe I would see a signal. I'll leave that for Letita and Long to consider and investigate further.
+
+Another question I have about their hypothesis is if the model is that SARS-Cov2 inhibits Xbp1 splicing by outcompeting for Ire1, Ire1-dependent splicing isn't necessary for this competition and all that needs to happen is Ire1 binding to SARSCov2 RNA (though granted, splicing is something we can observe with RNA-seq, so it made sense to look for splicing).

@@ -8,4 +8,4 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+See this [link](ExploreJuncTable.html) for my notebook about counting splice junctions from the bams:
