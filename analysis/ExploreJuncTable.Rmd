@@ -225,7 +225,7 @@ Though Long and I discussed how many of the SARS-Cov2 splice junction reads may 
 
 dat %>%
   filter(chrom=="MN908947.3") %>%
-  select(-name) %>%
+  select(-name, -acceptors_skipped, -exons_skipped, -donors_skipped, -anchor, -known_donor, -known_acceptor, -known_junction) %>%
   pivot_wider(names_from = "sample", values_from="score", values_fill=0) %>%
   write_tsv("../output/SplitReadCounts.tsv.gz")
 
