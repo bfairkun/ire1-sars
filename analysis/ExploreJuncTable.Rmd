@@ -159,6 +159,20 @@ dat %>%
   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
+dat %>%
+  mutate(HostOrVirus = case_when(
+    chrom == "MN908947.3" ~ "SARS-Cov2",
+    TRUE ~ "Host"
+  )) %>%
+  filter(HostOrVirus == "SARS-Cov2") %>%
+  mutate(SpliceSiteType = case_when(
+    splice_site %in% c("GT-AG", "AT-AC", "GC-AG") ~ "spliceosomal",
+    TRUE ~ "Non-spliceosomal"
+  )) %>%
+  filter(SpliceSiteType == "spliceosomal") %>%
+  arrange(desc(score))
+  
+
 ```
 
 
@@ -200,6 +214,20 @@ TotalCountsPerChrom %>%
   theme_bw() +
   ylab("Fraction reads") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+```
+
+Update:
+
+Though Long and I discussed how many of the SARS-Cov2 splice junction reads may be false positives, he nonetheless is interested in having this list of junctions. Here I will write out such a file:
+
+```{r}
+
+dat %>%
+  filter(chrom=="MN908947.3") %>%
+  select(-name) %>%
+  pivot_wider(names_from = "sample", values_from="score", values_fill=0) %>%
+  write_tsv("../output/SplitReadCounts.tsv.gz")
 
 ```
 

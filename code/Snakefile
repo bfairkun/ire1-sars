@@ -1,15 +1,22 @@
 # The main entry point of your workflow.
 # After configuring, running snakemake -n in a clone of this repository should successfully execute a dry-run of the workflow.
 
+include:
+    "rules/common.py",
 # Instead of using samples.tsv file, a quick/dirty way to apply rules over grob of existing files is this:
 # Before starting the pipeline, download bams to "bams/{sample}.bam". wget can download dropbox files from the command line like this: wget "https://www.dropbox.com/sh/x2wltsvcrvjn73d/AADhBFaFgQAX6TO6PvzgRSM9a/Galaxy60-IRE1KO-Sars2-3.bam?dl=1"
 IDS, = glob_wildcards("bams/{sample}.bam")
+
 
 rule all:
     input:
         # The first rule should define the default target files
         expand("../output/{sample}.annotated.bed.gz", sample=IDS),
-        "../output/TotalReadsPerChrom.tsv"
+        "../output/TotalReadsPerChrom.tsv",
+        expand("all_bams/{sample}.bam", sample=samples.index)
+
+include:
+    "rules/ProcessAllBams.smk"
 
 rule indexBams:
     input:
